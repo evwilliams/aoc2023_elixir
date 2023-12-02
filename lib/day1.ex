@@ -15,22 +15,10 @@ defmodule Day1 do
   }
 
   # Shared Logic
-  def process(filename, fun) do
+  def stream_lines(filename) do
     File.stream!(Path.join(@input_dir, filename))
     |> Stream.map(&String.trim(&1))
     |> Stream.filter(&(String.length(&1) > 0))
-    |> Stream.map(fun)
-    |> Enum.sum()
-  end
-
-  def solve(filename, forward_pattern, reverse_pattern) do
-    fun = fn line ->
-      first = run_on_match(forward_pattern, line, &Map.get(@mapping, &1, &1))
-      last = run_on_match(reverse_pattern, reverse(line), &Map.get(@mapping, reverse(&1), &1))
-      joined_int([first, last])
-    end
-
-    process(filename, fun)
   end
 
   def run_on_match(pattern, string, fun) do
@@ -43,8 +31,15 @@ defmodule Day1 do
 
   # Part 1 Entrypoint
   def part1(filename) do
-    pattern = Regex.compile!(@digit)
-    solve(filename, pattern, pattern)
+    pattern = ~r"[[:digit:]]"
+
+    stream_lines(filename)
+    |> Stream.map(fn line ->
+      first = run_on_match(pattern, line, & &1)
+      last = run_on_match(pattern, reverse(line), & &1)
+      joined_int([first, last])
+    end)
+    |> Enum.sum()
   end
 
   # Part 2 Entrypoint
@@ -53,6 +48,12 @@ defmodule Day1 do
     forward_pattern = Regex.compile!(@digit <> "|" <> text_pattern)
     reverse_pattern = Regex.compile!(@digit <> "|" <> reverse(text_pattern))
 
-    solve(filename, forward_pattern, reverse_pattern)
+    stream_lines(filename)
+    |> Stream.map(fn line ->
+      first = run_on_match(forward_pattern, line, &Map.get(@mapping, &1, &1))
+      last = run_on_match(reverse_pattern, reverse(line), &Map.get(@mapping, reverse(&1), &1))
+      joined_int([first, last])
+    end)
+    |> Enum.sum()
   end
 end

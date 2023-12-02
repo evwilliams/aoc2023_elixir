@@ -18,19 +18,19 @@ Benchmarking part1 ...
 Benchmarking part2 ...
 
 Name            ips        average  deviation         median         99th %
-part1        268.23        3.73 ms     ±2.26%        3.71 ms        3.93 ms
-part2        145.07        6.89 ms     ±1.23%        6.90 ms        7.15 ms
+part1        398.71        2.51 ms     ±2.34%        2.48 ms        2.67 ms
+part2        291.13        3.43 ms     ±2.08%        3.40 ms        3.62 ms
 
 Comparison: 
-part1        268.23
-part2        145.07 - 1.85x slower +3.17 ms
+part1        398.71
+part2        291.13 - 1.37x slower +0.93 ms
 
 Memory usage statistics:
 
 Name          average  deviation         median         99th %
-part1         4.39 MB     ±0.00%        4.39 MB        4.39 MB
-part2         4.54 MB     ±0.00%        4.54 MB        4.54 MB
+part1         3.50 MB     ±0.00%        3.50 MB        3.50 MB
+part2         3.89 MB     ±0.00%        3.89 MB        3.89 MB
 
 Comparison: 
-part1         4.39 MB
-part2         4.54 MB - 1.03x memory usage +0.147 MB
+part1         3.50 MB
+part2         3.89 MB - 1.11x memory usage +0.39 MB
