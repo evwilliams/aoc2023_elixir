@@ -1,0 +1,36 @@
+Operating System: macOS
+CPU Information: Apple M1 Pro
+Number of Available Cores: 8
+Available memory: 16 GB
+Elixir 1.15.7
+Erlang 26.0.2
+
+Benchmark suite executing with the following configuration:
+warmup: 2 s
+time: 5 s
+memory time: 2 s
+reduction time: 0 ns
+parallel: 1
+inputs: none specified
+Estimated total run time: 18 s
+
+Benchmarking part1 ...
+Benchmarking part2 ...
+
+Name            ips        average  deviation         median         99th %
+part1        268.23        3.73 ms     ±2.26%        3.71 ms        3.93 ms
+part2        145.07        6.89 ms     ±1.23%        6.90 ms        7.15 ms
+
+Comparison: 
+part1        268.23
+part2        145.07 - 1.85x slower +3.17 ms
+
+Memory usage statistics:
+
+Name          average  deviation         median         99th %
+part1         4.39 MB     ±0.00%        4.39 MB        4.39 MB
+part2         4.54 MB     ±0.00%        4.54 MB        4.54 MB
+
+Comparison: 
+part1         4.39 MB
+part2         4.54 MB - 1.03x memory usage +0.147 MB
