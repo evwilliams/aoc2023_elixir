@@ -1,5 +1,4 @@
 defmodule Day1 do
-  @input_dir "inputs/"
   @digit "[[:digit:]]"
   @mapping %{
     "one" => 1,
@@ -15,12 +14,6 @@ defmodule Day1 do
   }
 
   # Shared Logic
-  def stream_lines(filename) do
-    File.stream!(Path.join(@input_dir, filename))
-    |> Stream.map(&String.trim(&1))
-    |> Stream.filter(&(String.length(&1) > 0))
-  end
-
   def run_on_match(pattern, string, fun) do
     [match] = Regex.run(pattern, string)
     fun.(match)
@@ -33,7 +26,7 @@ defmodule Day1 do
   def part1(filename) do
     pattern = ~r"[[:digit:]]"
 
-    stream_lines(filename)
+    Helpers.stream_lines(filename)
     |> Stream.map(fn line ->
       first = run_on_match(pattern, line, & &1)
       last = run_on_match(pattern, reverse(line), & &1)
@@ -48,7 +41,7 @@ defmodule Day1 do
     forward_pattern = Regex.compile!(@digit <> "|" <> text_pattern)
     reverse_pattern = Regex.compile!(@digit <> "|" <> reverse(text_pattern))
 
-    stream_lines(filename)
+    Helpers.stream_lines(filename)
     |> Stream.map(fn line ->
       first = run_on_match(forward_pattern, line, &Map.get(@mapping, &1, &1))
       last = run_on_match(reverse_pattern, reverse(line), &Map.get(@mapping, reverse(&1), &1))
