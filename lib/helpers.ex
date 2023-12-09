@@ -5,6 +5,10 @@ defmodule Helpers do
     File.read!(Path.join(@input_dir, filename))
   end
 
+  def read_input(filename, of: fun) do
+    Enum.map(read_input(filename), fun)
+  end
+
   def write_output(filename, content) do
     File.write(Path.join(@input_dir, filename), content)
   end
@@ -13,6 +17,10 @@ defmodule Helpers do
     File.stream!(Path.join(@input_dir, filename))
     |> Stream.map(&String.trim(&1))
     |> Stream.filter(&(String.length(&1) > 0))
+  end
+
+  def stream_lines(filename, of: fun) do
+    Stream.map(stream_lines(filename), fun)
   end
 
   def string_after(text, pattern) do
