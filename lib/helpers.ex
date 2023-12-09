@@ -43,4 +43,7 @@ defmodule Helpers do
   def paragraphs(text) do
     Regex.split(~r'\n\n', text, trim: true)
   end
+
+  def lcm(0, 0), do: 0
+  def lcm(a, b), do: div(a * b, Integer.gcd(a, b))
 end

@@ -1,0 +1,35 @@
+Compiling 1 file (.ex)
+Operating System: macOS
+CPU Information: Apple M1 Pro
+Number of Available Cores: 8
+Available memory: 16 GB
+Elixir 1.15.7
+Erlang 26.0.2
+
+Benchmark suite executing with the following configuration:
+warmup: 2 s
+time: 5 s
+memory time: 2 s
+reduction time: 0 ns
+parallel: 1
+inputs: none specified
+Estimated total run time: 18 s
+
+Benchmarking part1 ...
+Benchmarking part2 ...
+
+Name            ips        average  deviation         median         99th %
+part1        128.36        7.79 ms     ±2.70%        7.83 ms        8.34 ms
+part2        116.24        8.60 ms     ±3.10%        8.62 ms        9.16 ms
+
+Comparison: 
+part1        128.36
+part2        116.24 - 1.10x slower +0.81 ms
+
+Memory usage statistics:
+
+Name     Memory usage
+part1        14.54 MB
+part2        16.50 MB - 1.14x memory usage +1.97 MB
+
+**All measurements for memory usage were the same**
