@@ -5,6 +5,10 @@ defmodule Helpers do
     File.read!(Path.join(@input_dir, filename))
   end
 
+  def write_output(filename, content) do
+    File.write(Path.join(@input_dir, filename), content)
+  end
+
   def stream_lines(filename) do
     File.stream!(Path.join(@input_dir, filename))
     |> Stream.map(&String.trim(&1))
@@ -33,7 +37,7 @@ defmodule Helpers do
   end
 
   def digits(text) do
-    Enum.map(Regex.scan(~r'\d+', text), fn [d] -> d end)
+    Enum.map(Regex.scan(~r'\-?\d+', text), fn [d] -> d end)
   end
 
   def ints(text) do

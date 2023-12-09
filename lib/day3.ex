@@ -53,8 +53,7 @@ defmodule Day3 do
 
     Enum.map(numbers, fn {number, location} ->
       adjacents(location, grid_info)
-      |> Stream.map(fn {char, coords} -> if char == "*", do: {coords, number} end)
-      |> Enum.reject(&is_nil/1)
+      |> Extensions.Enum.trimmed_map(fn {char, coords} -> if char == "*", do: {coords, number} end)
     end)
     |> List.flatten()
     |> Enum.group_by(fn {key, _} -> key end, fn {_, num} -> num end)
