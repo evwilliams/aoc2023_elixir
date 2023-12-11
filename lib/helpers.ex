@@ -23,6 +23,15 @@ defmodule Helpers do
     Stream.map(stream_lines(filename), fun)
   end
 
+  def character_grid(lines) do
+    Enum.with_index(lines)
+    |> Enum.flat_map(fn {line, row} ->
+      String.graphemes(line)
+      |> Enum.with_index(fn char, col -> {{row, col}, char} end)
+    end)
+    |> Map.new()
+  end
+
   def string_after(text, pattern) do
     [_ | [result]] = String.split(text, pattern)
     result
