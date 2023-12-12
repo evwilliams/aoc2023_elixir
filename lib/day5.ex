@@ -9,7 +9,7 @@ defmodule Day5 do
     [[seed_nums] | almanac] =
       Helpers.paragraphs(input)
       |> Enum.map(&Helpers.string_after(&1, ":"))
-      |> Enum.map(&Helpers.split_lines/1)
+      |> Enum.map(&Helpers.lines/1)
       |> Helpers.nested_map(&Helpers.ints/1)
 
     {seed_nums, Helpers.nested_map(almanac, &ranges_from_trio/1)}

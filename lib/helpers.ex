@@ -6,7 +6,7 @@ defmodule Helpers do
   end
 
   def read_input(filename, of: fun) do
-    Enum.map(read_input(filename), fun)
+    fun.(read_input(filename))
   end
 
   def write_output(filename, content) do
@@ -37,7 +37,7 @@ defmodule Helpers do
     result
   end
 
-  def split_lines(text) do
+  def lines(text) do
     Regex.split(~r'\n+', text, trim: true)
   end
 
