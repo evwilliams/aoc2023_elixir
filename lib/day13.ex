@@ -18,16 +18,9 @@ defmodule Day13 do
     end)
   end
 
-  def find_shared_index([first | rest]) do
-    Enum.find(first, fn index ->
-      Enum.all?(rest, &(index in &1))
-    end)
-  end
-
-  def parse(filename) do
-    Helpers.read_input(filename, of: &Helpers.paragraphs/1)
-    |> Enum.map(fn paragraph ->
-      Helpers.lines(paragraph)
+  def shared_indexes([first | rest]) do
+    Enum.map(first, fn index ->
+      if Enum.all?(rest, &(index in &1)), do: index, else: nil
     end)
   end
 
@@ -49,57 +42,97 @@ defmodule Day13 do
     end
   end
 
-  def part1(filename) do
-    paragraph_lines =
-      parse(filename)
-
+  def solve(lines) do
     vertical_splits =
-      paragraph_lines
-      |> Enum.map(fn puzzle ->
-        Enum.map(puzzle, fn line ->
-          mirror_indexes(line)
-        end)
-        |> find_shared_index()
+      Enum.map(lines, fn line ->
+        mirror_indexes(line)
       end)
+      |> shared_indexes()
 
     horizontal_splits =
-      paragraph_lines
-      |> Enum.map(&Helpers.character_grid/1)
-      |> Enum.map(&transpose_grid/1)
-      |> Enum.map(&grid_to_lines/1)
-      |> Enum.map(&Helpers.lines/1)
-      |> Enum.map(fn puzzle ->
-        Enum.map(puzzle, fn line ->
-          mirror_indexes(line)
-        end)
-        |> find_shared_index()
-      end)
-      |> Enum.map(&if !is_nil(&1), do: &1 * 100)
-
-    Enum.zip(vertical_splits, horizontal_splits)
-    |> Enum.map(fn {h, v} -> h || v end)
-    |> Enum.sum()
-  end
-
-  def test_flips(filename) when is_binary(filename) do
-    paragraph_lines = parse(filename)
-
-    Enum.all?(paragraph_lines, fn lines ->
-      test_flips(lines)
-    end)
-  end
-
-  def test_flips(lines) do
-    transposed_twice_lines =
-      Helpers.character_grid(lines)
-      |> transpose_grid()
-      |> grid_to_lines()
-      |> Helpers.lines()
+      lines
       |> Helpers.character_grid()
       |> transpose_grid()
       |> grid_to_lines()
       |> Helpers.lines()
+      |> then(fn puzzle ->
+        Enum.map(puzzle, fn line ->
+          mirror_indexes(line)
+        end)
+        |> shared_indexes()
+      end)
 
-    lines == transposed_twice_lines
+    {Enum.reject(vertical_splits, &is_nil/1), Enum.reject(horizontal_splits, &is_nil/1)}
+  end
+
+  def smudge(paragraph, at: offset) do
+    new_char =
+      case String.at(paragraph, offset) do
+        "#" -> "."
+        "." -> "#"
+      end
+
+    head = if offset > 0, do: String.slice(paragraph, 0..(offset - 1)), else: ""
+    tail = String.slice(paragraph, (offset + 1)..(offset + String.length(paragraph)))
+
+    head <> new_char <> tail
+  end
+
+  def pick_smudge({options, blocked_solution}) do
+    pick_smudge(options, blocked_solution)
+  end
+
+  def pick_smudge([paragraph | options], {blocked_v, blocked_h} = blocked) do
+    {v_splits, h_splits} = solve(paragraph)
+    v_splits = v_splits -- blocked_v
+    h_splits = h_splits -- blocked_h
+
+    if {v_splits, h_splits} == {[], []} do
+      pick_smudge(options, blocked)
+    else
+      {Enum.find_value(v_splits, & &1), Enum.find_value(h_splits, & &1)}
+    end
+  end
+
+  def part1(filename) do
+    Helpers.read_input(filename, of: &Helpers.paragraphs/1)
+    |> Enum.map(fn paragraph ->
+      Helpers.lines(paragraph)
+    end)
+    |> Enum.map(&solve/1)
+    |> IO.inspect()
+    |> Enum.map(fn {v_splits, h_splits} ->
+      {Enum.find_value(v_splits, & &1), Enum.find_value(h_splits, & &1)}
+    end)
+    |> IO.inspect()
+    |> Enum.map(fn {v, h} -> v || h * 100 end)
+    |> Enum.sum()
+  end
+
+  def all_smudge_options(paragraph) do
+    Enum.reject(0..(String.length(paragraph) - 1), fn offset ->
+      String.at(paragraph, offset) == "\n"
+    end)
+    |> Enum.map(fn offset ->
+      smudge(paragraph, at: offset)
+      |> Helpers.lines()
+    end)
+  end
+
+  def part2(filename) do
+    Helpers.read_input(filename, of: &Helpers.paragraphs/1)
+    |> Enum.map(fn paragraph ->
+      {v, h} =
+        Helpers.lines(paragraph)
+        |> solve()
+        |> then(fn {v_splits, h_splits} ->
+          {Enum.find_value(v_splits, & &1), Enum.find_value(h_splits, & &1)}
+        end)
+
+      {all_smudge_options(paragraph), {[v], [h]}}
+    end)
+    |> Enum.map(&pick_smudge/1)
+    |> Enum.map(fn {v, h} -> v || h * 100 end)
+    |> Enum.sum()
   end
 end
